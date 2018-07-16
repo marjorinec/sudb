@@ -1,0 +1,18 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE Cargo ( 	id_cargo int not null primary key, 	nome_cargo varchar(30) not null );
+CREATE TABLE Departamento ( 	id_dep int not null primary key, 	nome_dep varchar(30) not null );
+CREATE TABLE Funcionario ( 	matr_func int not null primary key, 	reg_func varchar(14) not null, 	nome_func varchar(80) not null, 	endereco_func varchar(100) not null, 	email_func varchar(50) not null, 	datanasc_func date not null, 	salario_func double, 	pf tinyint(1) not null, 	dep_id int, 	cargo_id int, 	CONSTRAINT dep_id 		FOREIGN KEY (dep_id) REFERENCES Departamento (id_dep), 	CONSTRAINT cargo_id 		FOREIGN KEY (cargo_id) REFERENCES Cargo (id_cargo) );
+CREATE TABLE Projeto ( 	id_proj int not null primary key, 	nome_proj varchar(20) not null, 	valor_proj double not null );
+CREATE TABLE Cliente ( 	reg_cli varchar(14) not null primary key, 	nome_cli varchar(50) not null, 	email_cli varchar(50) not null, 	apelido_cli varchar(20) );
+CREATE TABLE Fornecedor ( 	reg_fornec int not null primary key, 	nome_fornec varchar(50) not null, 	email_fornec varchar(50) not null );
+CREATE TABLE Custo ( 	id_custo int not null primary key, 	nome_custo varchar(30) not null, 	valor_custo double not null, 	origem_custo varchar(45) not null, 	projeto_id int, 	CONSTRAINT projeto_id 		FOREIGN KEY (projeto_id) REFERENCES Projeto(id_proj) );
+CREATE TABLE Funcionario_Telefone ( 	telefone_func varchar(13) not null primary key, 	func_matr int, 	CONSTRAINT func_matr 		FOREIGN KEY (func_matr) REFERENCES Funcionario(matr_func) );
+CREATE TABLE Trabalha_em ( 	func_matr int, 	proj_id int, 	CONSTRAINT func_matr 		FOREIGN KEY (func_matr) REFERENCES Funcionario(matr_func), 	CONSTRAINT proj_id 		FOREIGN KEY (proj_id) REFERENCES Projeto(id_proj) );
+CREATE TABLE Projeto_Cliente ( 	projet_id int, 	cliente_reg varchar(14), 	CONSTRAINT projet_id 		FOREIGN KEY (projet_id) REFERENCES Projeto(id_proj), 	CONSTRAINT cliente_id 		FOREIGN KEY (cliente_reg) REFERENCES Cliente(reg_cli) );
+CREATE TABLE Cliente_Telefone ( 	telefone_cli varchar(13) not null primary key, 	cli_reg varchar(14), 	CONSTRAINT cli_reg 		FOREIGN KEY (cli_reg) REFERENCES Cliente(reg_cli) );
+CREATE TABLE Funcionario_Custo ( 	funcionario_matr int, 	custo_id int, 	CONSTRAINT funcionario_matr 		FOREIGN KEY (funcionario_matr) REFERENCES Funcionario(matr_func), 	CONSTRAINT custo_id 		FOREIGN KEY (custo_id) REFERENCES Custo(id_custo) );
+CREATE TABLE Custo_Fornecedor ( 	cust_id int, 	forn_reg varchar(14), 	CONSTRAINT cust_id 		FOREIGN KEY (cust_id) REFERENCES Custo(id_custo), 	CONSTRAINT forn_reg 		FOREIGN KEY (forn_reg) REFERENCES Fornecedor(reg_fornec) );
+CREATE TABLE Fornecedor_Telefone ( 	telefone_fornec varchar(13) not null primary key, 	fornecedor_reg varchar(14), 	CONSTRAINT fornecedor_reg 		FOREIGN KEY (fornecedor_reg) REFERENCES Fornecedor(reg_fornec) );
+CREATE TABLE Fornecedor_Projeto ( 	fornece_reg varchar(14), 	pro_id int, 	CONSTRAINT fornece_reg 		FOREIGN KEY (fornece_reg) REFERENCES Fornecedor(reg_fornec), 	CONSTRAINT pro_id 		FOREIGN KEY (pro_id) REFERENCES Projeto(id_proj) );
+COMMIT;
